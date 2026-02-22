@@ -4,12 +4,18 @@
   <title>Entrep Sorting Ceremony</title>
   <style>
     body {
-      font-family: Georgia;
-      background-color: #1a1a1a;
+      background-color: #0f0f0f;
       color: gold;
       text-align: center;
-      padding: 50px;
+      font-family: Georgia;
+      padding: 40px;
     }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+    }
+
     button {
       padding: 10px 20px;
       font-size: 18px;
@@ -18,24 +24,110 @@
       border: none;
       cursor: pointer;
     }
+
+    #loading {
+      font-size: 20px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    table {
+      margin: 30px auto;
+      border-collapse: collapse;
+      width: 60%;
+    }
+
+    th, td {
+      border: 1px solid gold;
+      padding: 10px;
+    }
+
+    th {
+      background-color: darkred;
+    }
   </style>
 </head>
 <body>
 
-<h1>✨ Welcome to Entrep Days Sorting Ceremony ✨</h1>
+<h1>✨ Entrep Days Sorting Ceremony ✨</h1>
 
 <input type="text" id="name" placeholder="Enter your name">
-<br><br>
-<button onclick="sortGroup()">Get Sorted</button>
+<br><br><br>
+<button onclick="startSorting()">Get Sorted</button>
 
+<div id="loading">🧙 The Sorting Hat is thinking...</div>
 <h2 id="result"></h2>
 
+<h3>📜 Assigned Students</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Team</th>
+    </tr>
+  </thead>
+  <tbody id="recordTable"></tbody>
+</table>
+
 <script>
-function sortGroup() {
-  const groups = ["Team Phoenix 🔥", "Team Dragon 🐉", "Team Griffin 🦅", "Team Serpent 🐍"];
-  const random = Math.floor(Math.random() * groups.length);
+const groups = [
+  { name: "Team Phoenix 🔥", count: 0 },
+  { name: "Team Dragon 🐉", count: 0 },
+  { name: "Team Griffin 🦅", count: 0 },
+  { name: "Team Serpent 🐍", count: 0 }
+];
+
+let assignedNames = [];
+
+function startSorting() {
+  const name = document.getElementById("name").value.trim();
+
+  if (name === "") {
+    alert("Please enter your name!");
+    return;
+  }
+
+  if (assignedNames.includes(name)) {
+    alert("This name has already been sorted!");
+    return;
+  }
+
+  document.getElementById("loading").style.display = "block";
+  document.getElementById("result").innerText = "";
+
+  setTimeout(() => {
+    sortStudent(name);
+  }, 2000);
+}
+
+function sortStudent(name) {
+  document.getElementById("loading").style.display = "none";
+
+  let minCount = Math.min(...groups.map(g => g.count));
+  let availableGroups = groups.filter(g => g.count === minCount);
+
+  let chosenGroup = availableGroups[Math.floor(Math.random() * availableGroups.length)];
+  chosenGroup.count++;
+
+  assignedNames.push(name);
+
   document.getElementById("result").innerText =
-    document.getElementById("name").value + ", you are assigned to " + groups[random];
+    name + ", you are assigned to " + chosenGroup.name;
+
+  addToTable(name, chosenGroup.name);
+
+  document.getElementById("name").value = "";
+}
+
+function addToTable(name, team) {
+  const table = document.getElementById("recordTable");
+  const row = table.insertRow();
+
+  const cell1 = row.insertCell(0);
+  const cell2 = row.insertCell(1);
+
+  cell1.innerText = name;
+  cell2.innerText = team;
 }
 </script>
 
