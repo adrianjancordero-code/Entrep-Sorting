@@ -1,1 +1,43 @@
-# Entrep-Sorting
+# Entrep-Sorting<!DOCTYPE html>
+<html>
+<head>
+  <title>Entrep Sorting Ceremony</title>
+  <style>
+    body {
+      font-family: Georgia;
+      background-color: #1a1a1a;
+      color: gold;
+      text-align: center;
+      padding: 50px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: darkred;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h1>✨ Welcome to Entrep Days Sorting Ceremony ✨</h1>
+
+<input type="text" id="name" placeholder="Enter your name">
+<br><br>
+<button onclick="sortGroup()">Get Sorted</button>
+
+<h2 id="result"></h2>
+
+<script>
+function sortGroup() {
+  const groups = ["Team Phoenix 🔥", "Team Dragon 🐉", "Team Griffin 🦅", "Team Serpent 🐍"];
+  const random = Math.floor(Math.random() * groups.length);
+  document.getElementById("result").innerText =
+    document.getElementById("name").value + ", you are assigned to " + groups[random];
+}
+</script>
+
+</body>
+</html>
