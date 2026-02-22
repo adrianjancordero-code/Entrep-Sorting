@@ -2,74 +2,100 @@
 <html>
 <head>
   <title>Entrep Sorting Ceremony</title>
+
   <style>
     body {
-      background-color: #0f0f0f;
+      background: linear-gradient(to bottom, #0d0d0d, #1a0000);
       color: gold;
+      font-family: Georgia, serif;
       text-align: center;
-      font-family: Georgia;
-      padding: 40px;
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .form-section {
+      margin-top: 30px;
     }
 
     input {
       padding: 10px;
+      margin: 5px;
       font-size: 16px;
+      width: 220px;
     }
 
     button {
       padding: 10px 20px;
-      font-size: 18px;
+      font-size: 16px;
       background-color: darkred;
       color: white;
       border: none;
       cursor: pointer;
+      margin-top: 10px;
     }
 
-    #loading {
-      font-size: 20px;
-      margin-top: 20px;
+    .boxes {
       display: none;
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
     }
 
-    table {
-      margin: 30px auto;
-      border-collapse: collapse;
-      width: 60%;
+    .box {
+      width: 120px;
+      height: 120px;
+      background-color: #330000;
+      border: 2px solid gold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.3s;
     }
 
-    th, td {
-      border: 1px solid gold;
-      padding: 10px;
+    .box:hover {
+      background-color: gold;
+      color: black;
+      transform: scale(1.05);
     }
 
-    th {
-      background-color: darkred;
+    #result {
+      margin-top: 30px;
+      font-size: 22px;
     }
+
   </style>
 </head>
+
 <body>
 
 <h1>✨ Entrep Days Sorting Ceremony ✨</h1>
+<p>Enter the Magical Chamber of Assignment</p>
 
-<input type="text" id="name" placeholder="Enter your name">
-<br><br><br>
-<button onclick="startSorting()">Get Sorted</button>
+<div class="form-section">
+  <input type="text" id="studentNumber" placeholder="Enter Student Number"><br>
+  <input type="text" id="studentName" placeholder="Enter Full Name"><br>
+  <button onclick="proceed()">Proceed</button>
+</div>
 
-<div id="loading">🧙 The Sorting Hat is thinking...</div>
+<div class="boxes" id="boxSection">
+  <div class="box" onclick="chooseBox()">Box 1</div>
+  <div class="box" onclick="chooseBox()">Box 2</div>
+  <div class="box" onclick="chooseBox()">Box 3</div>
+  <div class="box" onclick="chooseBox()">Box 4</div>
+</div>
+
 <h2 id="result"></h2>
 
-<h3>📜 Assigned Students</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Team</th>
-    </tr>
-  </thead>
-  <tbody id="recordTable"></tbody>
-</table>
-
 <script>
+
 const groups = [
   { name: "Team Phoenix 🔥", count: 0 },
   { name: "Team Dragon 🐉", count: 0 },
@@ -77,58 +103,45 @@ const groups = [
   { name: "Team Serpent 🐍", count: 0 }
 ];
 
-let assignedNames = [];
+let assignedStudents = [];
 
-function startSorting() {
-  const name = document.getElementById("name").value.trim();
+function proceed() {
+  const studentNumber = document.getElementById("studentNumber").value.trim();
+  const studentName = document.getElementById("studentName").value.trim();
 
-  if (name === "") {
-    alert("Please enter your name!");
+  if(studentNumber === "" || studentName === "") {
+    alert("Please enter both Student Number and Name!");
     return;
   }
 
-  if (assignedNames.includes(name)) {
-    alert("This name has already been sorted!");
+  if(assignedStudents.includes(studentNumber)) {
+    alert("This Student Number has already been assigned!");
     return;
   }
 
-  document.getElementById("loading").style.display = "block";
-  document.getElementById("result").innerText = "";
-
-  setTimeout(() => {
-    sortStudent(name);
-  }, 2000);
+  document.getElementById("boxSection").style.display = "flex";
 }
 
-function sortStudent(name) {
-  document.getElementById("loading").style.display = "none";
+function chooseBox() {
+  const studentNumber = document.getElementById("studentNumber").value.trim();
+  const studentName = document.getElementById("studentName").value.trim();
 
   let minCount = Math.min(...groups.map(g => g.count));
   let availableGroups = groups.filter(g => g.count === minCount);
-
   let chosenGroup = availableGroups[Math.floor(Math.random() * availableGroups.length)];
+
   chosenGroup.count++;
+  assignedStudents.push(studentNumber);
 
-  assignedNames.push(name);
+  document.getElementById("result").innerHTML =
+    "🧙 " + studentName + " (" + studentNumber + "), you have been chosen for <br><br><strong>" 
+    + chosenGroup.name + "</strong>";
 
-  document.getElementById("result").innerText =
-    name + ", you are assigned to " + chosenGroup.name;
-
-  addToTable(name, chosenGroup.name);
-
-  document.getElementById("name").value = "";
+  document.getElementById("boxSection").style.display = "none";
+  document.getElementById("studentNumber").value = "";
+  document.getElementById("studentName").value = "";
 }
 
-function addToTable(name, team) {
-  const table = document.getElementById("recordTable");
-  const row = table.insertRow();
-
-  const cell1 = row.insertCell(0);
-  const cell2 = row.insertCell(1);
-
-  cell1.innerText = name;
-  cell2.innerText = team;
-}
 </script>
 
 </body>
